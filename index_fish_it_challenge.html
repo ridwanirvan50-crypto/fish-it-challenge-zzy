@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fish It Challenge</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#0b0f14;color:#fff;text-align:center;overflow:hidden}
+.screen{display:none;min-height:100vh;justify-content:center;align-items:center;flex-direction:column;padding:20px}
+.active{display:flex}
+h1,h2{color:#4de1ff;text-shadow:0 0 12px #4de1ff}
+button{padding:12px 24px;border:none;border-radius:12px;cursor:pointer;font-size:18px;margin:8px}
+.primary{background:#4de1ff}
+.danger{background:#ff5c5c;color:white;position:relative}
+.fish{font-size:60px;cursor:pointer;margin:15px}
+#footer{position:fixed;bottom:10px;width:100%;color:#888}
+#result{font-size:32px;margin-top:20px}
+.certificate{border:2px solid #4de1ff;padding:20px;border-radius:16px;max-width:500px}
+</style>
+</head>
+<body>
+
+<div id="s1" class="screen active">
+<h1>🎣 Fish It Challenge</h1>
+<p>Apakah kamu siap menjadi Master Fisherman?</p>
+<button class="primary" onclick="show('s2')">PLAY</button>
+</div>
+
+<div id="s2" class="screen">
+<h2>Tangkap 3 ikan!</h2>
+<div>
+<span class="fish" onclick="catchFish(this)">🐟</span>
+<span class="fish" onclick="catchFish(this)">🐠</span>
+<span class="fish" onclick="catchFish(this)">🦈</span>
+</div>
+<p id="count">0 / 3</p>
+</div>
+
+<div id="s3" class="screen">
+<h2>Kalau dapat Mythic Fish senang?</h2>
+<button class="primary" onclick="show('s4')">Iya 😎</button>
+<button id="noBtn" class="danger">Tidak 😒</button>
+</div>
+
+<div id="s4" class="screen">
+<h2>Pilih yang paling berharga</h2>
+<button onclick="alert('Salah bang 😭')">🐟 Common Fish</button>
+<button onclick="alert('Salah bang 😭')">🦈 Mythic Fish</button>
+<button class="primary" onclick="show('s5')">❤️ Aku</button>
+</div>
+
+<div id="s5" class="screen">
+<h2>🎰 Fish RNG</h2>
+<button class="primary" onclick="spin()">SPIN NOW</button>
+<div id="result"></div>
+</div>
+
+<div id="s6" class="screen">
+<div class="certificate">
+<h1>🏆 CERTIFICATE</h1>
+<h2>Fish It Challenge</h2>
+<p id="certName"></p>
+<p>Rank: LEGENDARY FISHERMAN</p>
+<p>Fish Power: 9999+</p>
+<p>Created by zzy</p>
+</div>
+</div>
+
+<div id="footer">Created by zzy</div>
+
+<script>
+function beep(f,d){
+ let a=new (window.AudioContext||window.webkitAudioContext)();
+ let o=a.createOscillator(),g=a.createGain();
+ o.connect(g);g.connect(a.destination);
+ o.frequency.value=f;o.start();
+ g.gain.exponentialRampToValueAtTime(0.0001,a.currentTime+d/1000);
+ o.stop(a.currentTime+d/1000);
+}
+function show(id){
+ document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+}
+let caught=0;
+function catchFish(el){
+ el.style.display='none';
+ caught++;
+ beep(500,120);
+ document.getElementById('count').innerText=caught+' / 3';
+ if(caught==3)setTimeout(()=>show('s3'),500);
+}
+const noBtn=document.getElementById('noBtn');
+noBtn.addEventListener('mouseover',()=>{
+ noBtn.style.position='absolute';
+ noBtn.style.left=Math.random()*80+'%';
+ noBtn.style.top=Math.random()*80+'%';
+});
+
+function spin(){
+ beep(700,150);
+ let r=Math.random()*100;
+ let txt="";
+ if(r<55) txt="🐟 Common Fish";
+ else if(r<80) txt="🐠 Rare Fish";
+ else if(r<90) txt="🐙 Epic Fish";
+ else if(r<97) txt="🦈 Mythic Fish";
+ else if(r<99) txt="🐉 Secret Fish";
+ else{
+   txt="👑 ADMIN FISH";
+   beep(1200,400);
+   alert("🚨 SERVER ALERT 🚨\nKamu mendapatkan ADMIN FISH!");
+ }
+ document.getElementById('result').innerHTML="<h2>"+txt+"</h2>";
+ setTimeout(()=>{
+   let n=prompt("Masukkan nama kamu:");
+   document.getElementById('certName').innerText="Nama: "+(n||"Player");
+   show('s6');
+ },1500);
+}
+</script>
+</body>
+</html>
